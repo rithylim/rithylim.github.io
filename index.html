@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Portfolio</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f6f9;
+      color: #333;
+    }
+
+    /* ── Header ── */
+    header {
+      background: #1a1a2e;
+      color: white;
+      text-align: center;
+      padding: 50px 20px 40px;
+    }
+    header h1 { font-size: 2.2rem; margin-bottom: 8px; }
+    header p  { font-size: 1rem; color: #aab4c8; }
+
+    /* ── Nav / Filter Tabs ── */
+    nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 30px 20px;
+      background: white;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    nav button {
+      padding: 8px 20px;
+      border: 2px solid #1a1a2e;
+      border-radius: 20px;
+      background: white;
+      color: #1a1a2e;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    nav button:hover,
+    nav button.active {
+      background: #1a1a2e;
+      color: white;
+    }
+
+    /* ── Main Grid ── */
+    main {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    /* ── Project Card ── */
+    .card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    }
+
+    .card-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Badge colours per category */
+    .badge-pcb      { background: #e8f5e9; color: #2e7d32; }
+    .badge-ai       { background: #e3f2fd; color: #1565c0; }
+    .badge-firmware { background: #fff3e0; color: #e65100; }
+
+    .card-body { padding: 20px; }
+    .card-body h3 { font-size: 1.05rem; margin-bottom: 8px; }
+    .card-body p  { font-size: 0.88rem; color: #666; line-height: 1.5; }
+
+    .card-footer {
+      padding: 12px 20px;
+      border-top: 1px solid #f0f0f0;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .tag {
+      font-size: 0.75rem;
+      background: #f0f0f0;
+      color: #555;
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+
+    /* ── Hidden state ── */
+    .card.hidden { display: none; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #999;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════ HEADER ════════════ -->
+<header>
+  <h1>Rithy LIM's Project Portfolio</h1>
+  <p>PCB Design · AI Projects · Embedded Firmware</p>
+</header>
+
+<!-- ════════════ FILTER TABS ════════════ -->
+<nav>
+  <button class="active" onclick="filter('all', this)">All Projects</button>
+  <button onclick="filter('pcb', this)">PCB Design</button>
+  <button onclick="filter('ai', this)">AI Projects</button>
+  <button onclick="filter('firmware', this)">Embedded Firmware</button>
+</nav>
+
+<!-- ════════════ PROJECT CARDS ════════════ -->
+<main id="grid">
+
+  <!-- ── PCB Design ── -->
+  <a class="card" data-cat="pcb" href="pcb_design/motor-driver-board.html" style="text-decoration:none;color:inherit;">
+    <div class="card-body">
+      <span class="card-badge badge-pcb">PCB Design</span>
+      <h3>Motor Driver Board</h3>
+      <p>4-layer PCB for a brushless DC motor controller with integrated gate drivers and current sensing.</p>
+    </div>
+    <div class="card-footer">
+      <span class="tag">KiCad</span>
+      <span class="tag">BLDC</span>
+      <span class="tag">Power Electronics</span>
+    </div>
+  </a>
+
+  <div class="card" data-cat="pcb">
+    <div class="card-body">
+      <span class="card-badge badge-pcb">PCB Design</span>
+      <h3>ESP32 IoT Breakout Board</h3>
+      <p>Custom breakout board for ESP32 with USB-C power delivery, LiPo charging, and sensor headers.</p>
+    </div>
+    <div class="card-footer">
+      <span class="tag">Altium</span>
+      <span class="tag">ESP32</span>
+      <span class="tag">IoT</span>
+    </div>
+  </div>
+
+  <div class="card" data-cat="pcb">
+    <div class="card-body">
+      <span class="card-badge badge-pcb">PCB Design</span>
+      <h3>STM32 Minimal Dev Board</h3>
+      <p>Compact development board for STM32F4 with SWD debug port, crystal, and decoupling network.</p>
+    </div>
+    <div class="card-footer">
+      <span class="tag">KiCad</span>
+      <span class="tag">STM32</span>
+      <span class="tag">ARM Cortex-M4</span>
+    </div>
+  </div>
+
+  <!-- ── AI Projects ── -->
+  <div class="card" data-cat="ai">
+    <div class="card-body">
+      <span class="card-badge badge-ai">AI Project</span>
+      <h3>Object Detection on Edge</h3>
+      <p>Real-time object detection using YOLOv8 deployed on a Raspberry Pi 4 with a camera module.</p>
+    </div>
+    <div class="card-footer">
+      <span class="tag">Python</span>
+      <span class="tag">YOLOv8</span>
+      <span class="tag">Raspberry Pi</span>
+    </div>
+  </div>
+
+  <div class="card" data-cat="ai">
+    <div class="card-body">
+      <span class="card-badge badge-ai">AI Project</span>
+      <h3>Predictive Maintenance Model</h3>
+      <p>ML model trained on vibration sensor data to predict motor bearing failures before they occur.</p>
+    </div>
+    <div class="card-footer">
+      <span class="tag">TensorFlow</span>
+      <span class="tag">Scikit-learn</span>
+      <span class="tag">Time Series</span>
+    </div>
+  </div>
+
+  <div class="card" data-cat="ai">
+    <div class="card-body">
+      <span class="card-badge badge-ai">AI Project</span>
+      <h3>Voice Command Classifier</h3>
+      <p>Keyword spotting model using TensorFlow Lite, trained on custom dataset and deployed on MCU.</p>
+    </div>
+    <div class="card-footer">
+      <span class="tag">TF Lite</span>
+      <span class="tag">Audio ML</span>
+      <span class="tag">STM32</span>
+    </div>
+  </div>
+
+  <!-- ── Embedded Firmware ── -->
+  <div class="card" data-cat="firmware">
+    <div class="card-body">
+      <span class="card-badge badge-firmware">Embedded Firmware</span>
+      <h3>RTOS-Based Sensor Hub</h3>
+      <p>FreeRTOS firmware for STM32 collecting data from I2C/SPI sensors and publishing via MQTT over Wi-Fi.</p>
+    </div>
+    <div class="card-footer">
+      <span class="tag">FreeRTOS</span>
+      <span class="tag">C</span>
+      <span class="tag">MQTT</span>
+    </div>
+  </div>
+
+  <div class="card" data-cat="firmware">
+    <div class="card-body">
+      <span class="card-badge badge-firmware">Embedded Firmware</span>
+      <h3>Custom Bootloader</h3>
+      <p>Bare-metal bootloader for STM32 supporting firmware-over-the-air (FOTA) updates via UART.</p>
+    </div>
+    <div class="card-footer">
+      <span class="tag">C</span>
+      <span class="tag">STM32 HAL</span>
+      <span class="tag">FOTA</span>
+    </div>
+  </div>
+
+  <div class="card" data-cat="firmware">
+    <div class="card-body">
+      <span class="card-badge badge-firmware">Embedded Firmware</span>
+      <h3>BLE Peripheral Device</h3>
+      <p>nRF52840 firmware implementing a custom BLE GATT service for real-time data streaming to a mobile app.</p>
+    </div>
+    <div class="card-footer">
+      <span class="tag">nRF5 SDK</span>
+      <span class="tag">BLE</span>
+      <span class="tag">GATT</span>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>© 2026 Rithy · All rights reserved.</p>
+</footer>
+
+<!-- ════════════ FILTER SCRIPT ════════════ -->
+<script>
+  function filter(cat, btn) {
+    // Update active button
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    // Show / hide cards
+    document.querySelectorAll('.card').forEach(card => {
+      if (cat === 'all' || card.dataset.cat === cat) {
+        card.classList.remove('hidden');
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
