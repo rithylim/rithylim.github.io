@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Neural-Edge – PCB Design</title>
+  <script type="module" src="https://kicanvas.org/kicanvas/kicanvas.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f6f9;
+      color: #333;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      background: #1a1a2e;
+      padding: 14px 30px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .topbar a {
+      color: #aab4c8;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .topbar a:hover { color: white; }
+    .topbar span { color: #555; }
+
+    /* ── Hero ── */
+    .hero {
+      background: #1a1a2e;
+      color: white;
+      padding: 40px 30px 50px;
+      text-align: center;
+    }
+    .hero .badge {
+      display: inline-block;
+      background: #e8f5e9;
+      color: #2e7d32;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 4px 14px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      letter-spacing: 0.5px;
+    }
+    .hero h1 { font-size: 2rem; margin-bottom: 10px; }
+    .hero p  { color: #aab4c8; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+
+    /* ── Meta row ── */
+    .meta-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 24px;
+      background: white;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 18px 30px;
+      font-size: 0.85rem;
+      color: #555;
+    }
+    .meta-row span strong { color: #1a1a2e; }
+
+    /* ── Content area ── */
+    .content {
+      max-width: 960px;
+      margin: 36px auto;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    /* ── Section card ── */
+    .section {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      padding: 28px;
+    }
+    .section h2 {
+      font-size: 1.1rem;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f0f0f0;
+      color: #1a1a2e;
+    }
+    .section h3 {
+      font-size: 0.95rem;
+      color: #1a1a2e;
+      margin: 22px 0 10px;
+    }
+    .section h3:first-of-type { margin-top: 0; }
+
+    .section p {
+      font-size: 0.92rem;
+      line-height: 1.7;
+      color: #555;
+      margin-bottom: 10px;
+    }
+    .section p:last-child { margin-bottom: 0; }
+
+    /* ── Feature list ── */
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .feature-list li {
+      font-size: 0.9rem;
+      color: #555;
+      padding-left: 20px;
+      position: relative;
+      line-height: 1.5;
+    }
+    .feature-list li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #2e7d32;
+      font-weight: bold;
+    }
+
+    /* ── Spec table ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 10px 14px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    th {
+      background: #f8f9fb;
+      color: #1a1a2e;
+      font-weight: 600;
+      width: 40%;
+    }
+    td { color: #555; }
+
+    /* ── KiCanvas embed ── */
+    kicanvas-embed {
+      width: 100%;
+      height: 500px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .sheet-label {
+      font-size: 0.8rem;
+      color: #888;
+      margin-bottom: 20px;
+      padding-left: 4px;
+    }
+
+    .sheet-divider {
+      border: none;
+      border-top: 1px solid #f0f0f0;
+      margin: 24px 0;
+    }
+
+    /* ── Tags ── */
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag {
+      font-size: 0.78rem;
+      background: #f0f0f0;
+      color: #555;
+      padding: 4px 12px;
+      border-radius: 12px;
+    }
+
+    /* ── Links ── */
+    .links { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn {
+      display: inline-block;
+      padding: 9px 22px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-primary { background: #1a1a2e; color: white; }
+    .btn-outline {
+      border: 2px solid #1a1a2e;
+      color: #1a1a2e;
+      background: white;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #bbb;
+      font-size: 0.82rem;
+    }
+    footer a { color: #aaa; }
+  </style>
+</head>
+<body>
+
+<!-- ── Breadcrumb ── -->
+<div class="topbar">
+  <a href="../index.html">← Back to Portfolio</a>
+  <span>/</span>
+  <a href="#">PCB Design</a>
+  <span>/</span>
+  <a href="#">Neural-Edge</a>
+</div>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="badge">PCB Design</div>
+  <h1>Neural-Edge</h1>
+  <p>A powerful edge AI development board based on ESP32-P4 and ESP32-C3, featuring MIPI DSI/CSI,
+     RS485, MicroSD, and rich peripherals for embedded AI applications.</p>
+</div>
+
+<!-- ── Meta ── -->
+<div class="meta-row">
+  <span><strong>Status:</strong> In Progress</span>
+  <span><strong>Date:</strong> May 2026</span>
+  <span><strong>Tool:</strong> KiCad</span>
+  <span><strong>MCU:</strong> ESP32-P4 + ESP32-C3</span>
+</div>
+
+<!-- ── Main Content ── -->
+<div class="content">
+
+  <!-- Overview -->
+  <div class="section">
+    <h2>Overview</h2>
+    <p>
+      Neural-Edge is a custom-designed PCB built around the ESP32-P4 — Espressif's high-performance
+      SoC featuring a dual-core RISC-V processor with a built-in AI accelerator. The board is designed
+      for edge AI inference tasks such as image classification, object detection, and sensor fusion.
+    </p>
+    <p>
+      An ESP32-C3 co-processor handles wireless connectivity (Wi-Fi / BLE), offloading communication
+      tasks from the main processor. The board includes MIPI DSI/CSI interfaces for displays and cameras,
+      RS485 for industrial communication, and a MicroSD slot for local data logging.
+    </p>
+    <p style="color:#e65100;font-size:0.88rem;">
+      ✏️ <em>Feel free to update this description to match your actual design intent.</em>
+    </p>
+  </div>
+
+  <!-- Features -->
+  <div class="section">
+    <h2>Key Features</h2>
+    <ul class="feature-list">
+      <li>ESP32-P4 dual-core RISC-V @ 400 MHz with hardware AI accelerator</li>
+      <li>ESP32-C3 co-processor for Wi-Fi 6 and Bluetooth 5 connectivity</li>
+      <li>MIPI DSI interface for display output</li>
+      <li>MIPI CSI interface for camera input</li>
+      <li>RS485 transceiver for industrial serial communication</li>
+      <li>MicroSD card slot for data logging and model storage</li>
+      <li>Onboard power regulation with multiple voltage rails</li>
+      <li>Rich peripheral headers for expansion</li>
+    </ul>
+  </div>
+
+  <!-- Specs -->
+  <div class="section">
+    <h2>Specifications</h2>
+    <table>
+      <tr><th>Main Processor</th><td>ESP32-P4 (Dual-core RISC-V)</td></tr>
+      <tr><th>Co-Processor</th><td>ESP32-C3 (Wi-Fi 6 / BLE 5)</td></tr>
+      <tr><th>Display Interface</th><td>MIPI DSI</td></tr>
+      <tr><th>Camera Interface</th><td>MIPI CSI</td></tr>
+      <tr><th>Industrial Comm.</th><td>RS485</td></tr>
+      <tr><th>Storage</th><td>MicroSD (SDIO)</td></tr>
+      <tr><th>Design Tool</th><td>KiCad</td></tr>
+    </table>
+  </div>
+
+  <!-- Schematics -->
+  <div class="section">
+    <h2>Schematics</h2>
+
+    <h3>Block Diagram</h3>
+    <kicanvas-embed
+      src="https://raw.githubusercontent.com/rithylim/ESP32-P4-Neural-Edge-PCB/main/block_diagram.kicad_sch"
+      controls="full">
+    </kicanvas-embed>
+    <p class="sheet-label">Top-level block diagram showing system architecture.</p>
+    <hr class="sheet-divider">
+
+    <h3>Root Schematic</h3>
+    <kicanvas-embed
+      src="https://raw.githubusercontent.com/rithylim/ESP32-P4-Neural-Edge-PCB/main/Neural-Edge.kicad_sch"
+      controls="full">
+    </kicanvas-embed>
+    <p class="sheet-label">Root schematic with sheet hierarchy overview.</p>
+    <hr class="sheet-divider">
+
+    <h3>ESP32-P4</h3>
+    <kicanvas-embed
+      src="https://raw.githubusercontent.com/rithylim/ESP32-P4-Neural-Edge-PCB/main/esp32-p4.kicad_sch"
+      controls="full">
+    </kicanvas-embed>
+    <p class="sheet-label">Main processor schematic — ESP32-P4 pinout, decoupling, and signal routing.</p>
+    <hr class="sheet-divider">
+
+    <h3>ESP32-C3</h3>
+    <kicanvas-embed
+      src="https://raw.githubusercontent.com/rithylim/ESP32-P4-Neural-Edge-PCB/main/esp32-c3.kicad_sch"
+      controls="full">
+    </kicanvas-embed>
+    <p class="sheet-label">Co-processor schematic — ESP32-C3 for Wi-Fi and BLE connectivity.</p>
+    <hr class="sheet-divider">
+
+    <h3>Power</h3>
+    <kicanvas-embed
+      src="https://raw.githubusercontent.com/rithylim/ESP32-P4-Neural-Edge-PCB/main/power.kicad_sch"
+      controls="full">
+    </kicanvas-embed>
+    <p class="sheet-label">Power supply schematic — voltage regulators, rails, and protection circuits.</p>
+    <hr class="sheet-divider">
+
+    <h3>MIPI DSI / CSI</h3>
+    <kicanvas-embed
+      src="https://raw.githubusercontent.com/rithylim/ESP32-P4-Neural-Edge-PCB/main/mipi_dsi_csi.kicad_sch"
+      controls="full">
+    </kicanvas-embed>
+    <p class="sheet-label">MIPI DSI display and CSI camera interface schematic.</p>
+    <hr class="sheet-divider">
+
+    <h3>RS485</h3>
+    <kicanvas-embed
+      src="https://raw.githubusercontent.com/rithylim/ESP32-P4-Neural-Edge-PCB/main/rs485.kicad_sch"
+      controls="full">
+    </kicanvas-embed>
+    <p class="sheet-label">RS485 transceiver schematic for industrial serial communication.</p>
+    <hr class="sheet-divider">
+
+    <h3>MicroSD</h3>
+    <kicanvas-embed
+      src="https://raw.githubusercontent.com/rithylim/ESP32-P4-Neural-Edge-PCB/main/uSD.kicad_sch"
+      controls="full">
+    </kicanvas-embed>
+    <p class="sheet-label">MicroSD card interface schematic — SDIO mode with level shifting.</p>
+    <hr class="sheet-divider">
+
+    <h3>Peripherals</h3>
+    <kicanvas-embed
+      src="https://raw.githubusercontent.com/rithylim/ESP32-P4-Neural-Edge-PCB/main/peripheral.kicad_sch"
+      controls="full">
+    </kicanvas-embed>
+    <p class="sheet-label">Peripheral schematic — connectors, buttons, LEDs, and expansion headers.</p>
+
+  </div>
+
+  <!-- PCB Layout -->
+  <div class="section">
+    <h2>PCB Layout</h2>
+    <kicanvas-embed
+      src="https://raw.githubusercontent.com/rithylim/ESP32-P4-Neural-Edge-PCB/main/Neural-Edge.kicad_pcb"
+      controls="full">
+    </kicanvas-embed>
+    <p class="sheet-label">Interactive PCB layout — zoom, pan, and toggle layers.</p>
+  </div>
+
+  <!-- Tags -->
+  <div class="section">
+    <h2>Tools & Technologies</h2>
+    <div class="tags">
+      <span class="tag">KiCad</span>
+      <span class="tag">ESP32-P4</span>
+      <span class="tag">ESP32-C3</span>
+      <span class="tag">MIPI DSI</span>
+      <span class="tag">MIPI CSI</span>
+      <span class="tag">RS485</span>
+      <span class="tag">MicroSD</span>
+      <span class="tag">FreeRTOS</span>
+      <span class="tag">Edge AI</span>
+      <span class="tag">RISC-V</span>
+    </div>
+  </div>
+
+  <!-- Links -->
+  <div class="section">
+    <h2>Project Links</h2>
+    <div class="links">
+      <a class="btn btn-primary" href="https://github.com/rithylim/ESP32-P4-Neural-Edge-PCB" target="_blank">GitHub Repository</a>
+      <a class="btn btn-outline" href="https://github.com/rithylim/ESP32-P4-Neural-Edge-PCB/tree/main/export" target="_blank">Download Gerbers</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 Rithy Lim · All rights reserved · <a href="../index.html">Back to Portfolio</a></p>
+</footer>
+
+</body>
+</html>
